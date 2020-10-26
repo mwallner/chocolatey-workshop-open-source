@@ -1,7 +1,7 @@
 # Chocolatey (OSS) Workshop
 
 This workshop aims to provide a basic understanding of the Chocolatey package manager.
-A series of exercises will guide you through the installation of Chocolatey itself, package installation and creation as well as some additonal material on how to get started using Chocolatey OSS in an organization.
+A series of exercises will guide you through the installation of Chocolatey itself, package installation and creation as well as some additional material on how to get started using Chocolatey OSS in an organization.
 
 Chocolatey Workshops on GitHub
 
@@ -32,7 +32,7 @@ Manfred Wallner, Linux Advocate turned Chocolatey enthusiast
 
 ## Workshop Exercises
 
-The following exercies are meant to be guided tasks after which workshop participants should be able to repeat the required steps on their own without further assistance.
+The following exercises are meant to be guided tasks after which workshop participants should be able to repeat the required steps on their own without further assistance.
 
 * Exercises
   * [1: Install Chocolatey](#exercise-1-Install-Chocolatey)
@@ -46,9 +46,9 @@ The following exercies are meant to be guided tasks after which workshop partici
 
 ## What is a Package
 
-A fancy zip file containg
+A fancy zip file containing:
 
-* a **.nuspec**, containing the metadata for the Package
+* a **.nuspec**, containing the metadata for the Package (e.g. name, version, description or dependencies)
 * _OPTIONAL_: a couple of PowerShell files which are run on certain events
   * chocolateyInstall.ps1
   * chocolateyUninstall.ps1
@@ -56,7 +56,7 @@ A fancy zip file containg
 * _OPTIONAL_: arbitrary additional files
   * MSI/exe files
   * ZIP files
-  * ANYTHING
+  * ...
 
 ## Chocolatey Installation
 
@@ -67,12 +67,12 @@ The PowerShell way
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 ```
 
-cmd.exe
+The cmd.exe way
 ```cmd
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command " [System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 ```
 
-:warning: Both methods really break down to do the same thing - calling the `install.ps1` of chocolatey.org. You **DO NOT** want to do this in an organizational context (for many reasons) - see [Offline Installation](#Offline-Installation).
+:warning: Both methods really break down to do the same thing - calling the `install.ps1` of chocolatey.org. You **DO NOT** want to do this in an organizational context (for many reasons including security) - see [Offline Installation](#Offline-Installation).
 
 ### Exercise 1: Install Chocolatey
 
@@ -84,7 +84,7 @@ It's perfectly fine to utilize the online installer script of Chocolatey in smal
 
 * Security
   * do not run arbitrary code
-  * do not take any dependency on a resource that's not AV checked
+  * do not take any dependency on a resource that's not checked by an Anti Virus tool
 * Availability
   * do not rely on remote resources to be available - have a internal copy of everything you need
 
@@ -96,7 +96,7 @@ TODO: Prepare offline installer (7z SFX installer)[https://florianwinkelbauer.co
 
 ### A quick word on Fair-Use limits (a.k.a. "Rate Limiting")
 
-To improve stability and availability of the Community Repository, installs and upgrades are limited per ip.
+To improve stability and availability of the Community Repository, installs and upgrades are limited per IP address.
 To put it simple: be nice, if you're using Chocolatey on more than a handful of machines, setup a local cache and download the packages from there. (see [Local Chocolatey Package Repository](#local-chocolatey-package-repository))
 
 :warning: purchasing a pro/enterprise license has no effect on rate-limiting!
@@ -108,11 +108,12 @@ source: [chocolatey.org](https://chocolatey.org/docs/community-packages-disclaim
 
 ### Exercise 2: Install Visual Studio Code
 
-1. Call `choco install vscode -y`
-2. Note the message "Environment Vars have changed".
-3. Type `code`. Notice that it errors.
-4. Type `refreshenv`.
-5. Type `code`. Note that it opens Visual Studio Code.
+1. Open an Administrator terminal (`powershell.exe` or `cmd.exe`)
+2. Call `choco install vscode -y`
+3. Note the message "Environment Vars have changed".
+4. Type `code`. Notice that it errors.
+5. Type `refreshenv`.
+6. Type `code`. Note that it opens Visual Studio Code.
 
 ### Exercise 3: Install Git using package parameters
 
@@ -121,25 +122,25 @@ source: [chocolatey.org](https://chocolatey.org/docs/community-packages-disclaim
 3. Type `refreshenv`.
 4. Type `git --version`
 
-### list installed packages
+### List installed packages
 
 ```PowerShell
 choco list -lo
 ```
 
-### check for outdated packages
+### Check for outdated packages
 
 ```PowerShell
 choco outdated
 ```
 
-another alternative:
+Another alternative:
 
 ```PowerShell
 choco upgrade all -noop
 ```
 
-**try adding the `-r` switch to the commands above!**
+**Try adding the `-r` switch to the commands above!**
 
 ## Creating and installing your own packages
 
@@ -154,7 +155,7 @@ choco new <packageName>
 
 ### Exercise 4: Create a package the old fashioned way
 
-This is meant to be an exploratory exercise and intentionally doesn't doesn't provide much direction.
+This is meant to be an exploratory exercise and intentionally doesn't provide much direction.
 
 1. Download Google Chrome from https://dl.google.com/tag/s/dl/chrome/install/googlechromestandaloneenterprise64.msi and https://dl.google.com/tag/s/dl/chrome/install/googlechromestandaloneenterprise.msi.
 2. From a command line, call `choco new googlechrome`
@@ -166,7 +167,7 @@ This is meant to be an exploratory exercise and intentionally doesn't doesn't pr
 
 1. Go to https://chocolatey.org/packages/GoogleChrome
 2. Find the "Download" button on the left hand side and download the nupkg
-3. Extract the nupkg (install 7zip via Chocolatey if not already present)
+3. Extract the nupkg (install `7zip` via Chocolatey if not already present)
 4. Take a look at the nuspec and see if there are any dependencies
 5. Inspect all .ps1 files and download contained URLs
 6. Replace external URLs with the corresponding internal/offline file
@@ -178,7 +179,7 @@ This is meant to be an exploratory exercise and intentionally doesn't doesn't pr
 DO NOT:
 
 * duplicate packages that already exist (check the community repo!)
-* create packages fore more than 1 piece of software (1 package - 1 reponsibility!)
+* create packages fore more than one piece of software (one package - one responsibility!)
 
 DO:
 
@@ -192,15 +193,15 @@ DO:
 
 TODO: a quick note on distribution rights
 
-### Self-Contained vs. Included Installers vs. JIT Downloads
+### Self-Contained vs. Included Installers vs. Just In Time Downloads
 
 When creating packages, try to prefer self-contained over included installers over jit-downloads.
 
-1. "self-contained": ditch all automation scripts, just include binaries/executables, Chocolatey & shimgen will take care of the rest.
+1. "self-contained": ditch all automation scripts, just include binaries/executable, Chocolatey & shimgen will take care of the rest.
 
 2. "include installers": distribute application installers or zips with the nupkg, use automation scripts to execute/unpack them.
 
-3. "jit downloads": use automations scripts to download installation files from remote locations and execute/unpack them.
+3. "jit downloads": use automation scripts to download installation files from remote locations and execute/unpack them.
 
 ## Setting up an internal Chocolatey repository
 
@@ -230,7 +231,7 @@ choco source disable -n chocolatey
 #### Advantages
 
 * Speed of setup (can be setup almost immediately).
-* Package store is filesystem.
+* Package store is a simple file system.
 * Can be easily upgrade to Simple Server.
 * Permissions are based on file system/share permissions.
 * Can manage PowerShell gallery type packages.
@@ -249,6 +250,8 @@ choco source disable -n chocolatey
 ```PowerShell
 choco install ProGet -y --package-parameters="/LicenseKey:XXX"
 ```
+
+**Note:** ProGet is a commercial product which also offers a free edition.
 
 ## Packaging -> Test -> Push Pipeline
 
@@ -310,12 +313,12 @@ Blog Post: [getting started with Chocolatey & Jenkins](https://blog.pauby.com/po
 
 ### Chocolatey OSS
 
-There's no "automatic" reporting in the OSS version of Chocolatey, **however**
+There's no "automatic" reporting in the OSS version of Chocolatey, you can however create your own monitoring by watching these directories:
 
-* have a look at `$env:ChocolateyInstall\lib\`
-* does `$env:ChocolateyInstall\lib-bad\` exist
+* `$env:ChocolateyInstall\lib\` includes every installed package
+* `$env:ChocolateyInstall\lib-bad\` contains failed installations
 
-sample PowerShell script that could be run on user login to push "installed packages" and "failed packages" to a "log-server":
+This PowerShell sample script could be run on user login to push "installed packages" and "failed packages" to a "log-server":
 
 ```PowerShell
 param(
@@ -368,7 +371,7 @@ Copy-Item $Boxstarter.BaseDir C:\BoxstarterPortable -Recurse
 C:\BoxstarterPortable\Boxstarter example
 ```
 
-Create a PowerShell script that looks like this (make sure cinst powershell is at the very top, replace the following lines with whatever fits your scenario)
+Create a PowerShell script that looks like this (make sure that the `cinst powershell` is at the very top. Replace the following lines with whatever fits your scenario)
 
 ```PowerShell
 cinst powershell
